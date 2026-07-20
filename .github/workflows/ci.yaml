@@ -1,0 +1,54 @@
+# 品質ゲートの機械的強制。単独クレートのため checkout は自身のみ
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy, llvm-tools-preview
+      - uses: Swatinem/rust-cache@v2
+      - name: フォーマット検査
+        run: cargo fmt --check
+      # serde は任意 feature のため、有無の両構成を検証する
+      # (片方でしかコンパイルが通らない状態を見逃さないため)
+      - name: Lint(clippy pedantic, 警告ゼロ / feature なし)
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Lint(clippy pedantic, 警告ゼロ / 全 feature)
+        run: cargo clippy --all-targets --all-features -- -D warnings
+      - name: テスト(doctest 含む / feature なし)
+        run: cargo test
+      - name: テスト(doctest 含む / 全 feature)
+        run: cargo test --all-features
+      - name: ドキュメント生成(rustdoc 警告もエラー扱い)
+        run: cargo doc --no-deps --all-features
+        env:
+          RUSTDOCFLAGS: -D warnings
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov,cargo-machete
+      - name: 未使用依存の検査
+        run: cargo machete
+      - name: カバレッジ(行・関数 100% 必須 / 全 feature)
+        run: cargo llvm-cov --all-features --fail-under-lines 100 --fail-under-functions 100
+
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88"
+      - uses: Swatinem/rust-cache@v2
+      - name: MSRV でのビルド検証
+        run: cargo check --all-targets --all-features

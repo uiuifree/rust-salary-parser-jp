@@ -1,0 +1,56 @@
+[package]
+name = "salary-parser-jp"
+# crates.io の全文検索は name / description / keywords のみが対象(README は非対象)。
+# 検索されうる語(job posting, hourly/monthly/yearly, normalize)をここに含める
+description = "Parse Japanese job-posting salary text (月給21万円〜26万円) into typed yen amounts: hourly, daily, monthly, yearly. Normalizes full-width digits, 億/万/千 notation and noise. No regex, no panics."
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/uiuifree/salary-parser-jp"
+documentation = "https://docs.rs/salary-parser-jp"
+keywords = ["salary", "japanese", "parser", "wage", "normalization"]
+categories = ["text-processing", "parser-implementations", "internationalization"]
+# CLAUDE.md は開発環境固有の設定で利用者に不要(AGENTS.md は README から参照するため同梱)
+exclude = [".github/", ".idea/", "CLAUDE.md"]
+
+[package.metadata.docs.rs]
+# docs.rs では型名からソース定義へ直接リンクさせる(監査用途で正規化規則を追いやすくする)
+rustdoc-args = ["--generate-link-to-definition"]
+# 任意 feature の実装も docs.rs 上に出す
+all-features = true
+
+[features]
+# 解析結果の JSON/JSONL 連携が要るときだけ有効化する。既定では無効で、
+# serde_derive の proc-macro チェーンを不要な利用者に背負わせない
+serde = ["dep:serde"]
+
+[dependencies]
+# 依存最小主義: 必須依存はエラー定義の thiserror のみ。
+# 正規化・抽出は手書き実装(regex 不使用)— panic 経路ゼロと速度を両立するため
+thiserror = "2"
+# serde は任意。エコシステム慣行(uuid / url / semver など)に倣い opt-in にする
+serde = { version = "1", features = ["derive"], optional = true }
+
+[dev-dependencies]
+# serde feature を有効にしたときの往復テスト専用
+serde_json = "1"
+
+[lints.rust]
+unsafe_code = "deny"
+missing_docs = "deny"
+dead_code = "deny"
+unused = { level = "deny", priority = -1 }
+
+[lints.clippy]
+pedantic = { level = "deny", priority = -1 }
+unwrap_used = "deny"
+expect_used = "deny"
+# モジュール名を含む型名は可読性優先で許容
+module_name_repetitions = "allow"
+
+[lints.rustdoc]
+broken_intra_doc_links = "deny"
+private_intra_doc_links = "deny"
+bare_urls = "deny"
