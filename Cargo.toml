@@ -3,12 +3,12 @@ name = "salary-parser-jp"
 # crates.io の全文検索は name / description / keywords のみが対象(README は非対象)。
 # 検索されうる語(job posting, hourly/monthly/yearly, normalize)をここに含める
 description = "Parse Japanese job-posting salary text (月給21万円〜26万円) into typed yen amounts: hourly, daily, monthly, yearly. Normalizes full-width digits, 億/万/千 notation and noise. No regex, no panics."
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.88"
 license = "Apache-2.0"
 readme = "README.md"
-repository = "https://github.com/uiuifree/salary-parser-jp"
+repository = "https://github.com/uiuifree/rust-salary-parser-jp"
 documentation = "https://docs.rs/salary-parser-jp"
 keywords = ["salary", "japanese", "parser", "wage", "normalization"]
 categories = ["text-processing", "parser-implementations", "internationalization"]

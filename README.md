@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/salary-parser-jp.svg)](https://crates.io/crates/salary-parser-jp)
 [![docs.rs](https://img.shields.io/docsrs/salary-parser-jp)](https://docs.rs/salary-parser-jp)
-[![CI](https://github.com/uiuifree/salary-parser-jp/actions/workflows/ci.yaml/badge.svg)](https://github.com/uiuifree/salary-parser-jp/actions/workflows/ci.yaml)
+[![CI](https://github.com/uiuifree/rust-salary-parser-jp/actions/workflows/ci.yaml/badge.svg)](https://github.com/uiuifree/rust-salary-parser-jp/actions/workflows/ci.yaml)
 ![MSRV](https://img.shields.io/badge/MSRV-1.88-blue.svg)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
